@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionaires</title>
+
+    <!-- css files -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="css/select2.min.css">
+
+    <!-- js files -->
+    <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootbox.min.js"></script>
+    <script type="text/javascript" src="js/fontawesome.all.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+
+    <style>
+        .list-group-item{
+            display: flex;
+            flex-direction: row;
+        }
+        .list-row{
+            flex: 1;
+        }
+        .list-detail{
+            flex: 15;
+            display: flex;
+            flex-direction: row;
+        }
+        .QuestionareTitle{
+            flex: 3;
+        }
+        .Time{
+            flex: 2;
+        }
+        .delete-link{
+            flex: 2;            
+            align-self: flex-end;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Questionare Name</label>
+                                    <input type="text" class="form-control" name="QuestionareName" id="QuestionareName">
+                                </div>
+                            </div>
+                        </div>   
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Questionare Title</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" name="QuestionareTitle" id="QuestionareTitle">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Time</label><span class="text-danger">*</span>
+                                    <select class="form-control cursor-pointer" id="Time" name="Time" required>
+                                        <option value="1">1 Min</option>
+                                        <option value="2">2 Min</option>
+                                        <option value="3">3 Min</option>
+                                        <option value="4">4 Min</option>
+                                        <option value="5">5 Min</option>
+                                        <option value="6">6 Min</option>
+                                        <option value="7">7 Min</option>
+                                        <option value="8">8 Min</option>
+                                        <option value="9">9 Min</option>
+                                        <option value="10">10 Min</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">  
+                                    <div class="d-none d-md-block d-lg-block d-xl-block">&nbsp;</div>
+                                    <button id="btnSave" type="button" class="btn btn-dark mt-2"><i class="fa fa-save text-light"></i> Save</button>                                  
+                                </div>
+                            </div>
+                        </div>  
+
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="list-group">
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function(){
+            var rowno = 0;
+            $('#btnSave').click(function(){
+                var QuestionareTitle = $('#QuestionareTitle').val();
+                var Time = $('#Time :selected').text();
+                rowno++;
+
+                if($.trim(QuestionareTitle) == ""){
+                    bootbox.alert('Questionaire Title is mendatory');
+                    return false;
+                }
+
+                var item = `<li class="list-group-item" id="li_${rowno}">`;
+                item += `<span class="list-row">${rowno}</span>`;
+                item += `<div class="list-detail">
+                            <span class="QuestionareTitle">${QuestionareTitle}</span> <span class="Time">${Time}</span>
+                            <span class="delete-link"><a class="text-danger float-right" onclick="deleteQuestionaire(${rowno})" href="#"><u>DELETE</u></a></span>`;
+                item += `<input type="hidden" class="form-control form-control-sm" name="QuestionareTitle_Detail[]" id="QuestionareTitle_Detail_${rowno}" value="${QuestionareTitle}" /> </div>            
+                <input type="hidden" class="form-control form-control-sm" name="Time_Detail[]" id="Time_Detail_${rowno}" value="${Time}" />`; 
+                item += `</div>`;
+                item += '</li>';
+                
+                $('.list-group').append(item);
+
+                $('#QuestionareTitle').val('');
+                $('#Time').val(1);
+
+                $('#QuestionareTitle').focus();
+
+                rowRearrange();
+            });
+        });
+
+        function deleteQuestionaire(row){
+            bootbox.confirm("Are you sure to remove the record?", function(result) {
+                if(result){     
+                    $(`#li_${row}`).remove();
+                    rowRearrange();
+                }
+            });            
+        }
+
+        function rowRearrange(){
+            var r = 0;
+            $('.list-row').each(function(){
+                $(this).html(++r);
+            });
+        }
+    </script>
+
+</body>
+</html>
